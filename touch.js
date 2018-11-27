@@ -179,40 +179,6 @@ var initWxConfig = function () {
 };
 
 
-/*cookies*/
-
-var Cookies = {
-    path: '/',
-    set: function (k, v, t) {
-        var cookie = k + '=' + v;
-        cookie += ';' + 'expires=' + new Date((+new Date()) + (t || 9e9) * 1000).toGMTString();
-        if (this.domain) {
-            cookie += ';' + 'domain=' + this.domain;
-        }
-        if (this.path) {
-            cookie += ';' + 'path=' + this.path;
-        }
-        document.cookie = cookie;
-        return this;
-    },
-    noop: function (v) {
-        return v;
-    },
-    get: function (k, m) {
-        var kv = {}, a = document.cookie.match(/[^=; ]+=[^=;]+/g) || [];
-        m = m || this.noop;
-        for (var i = a.length; i--;) {
-            var p = a[i].split('=');
-            kv[p[0]] = m(p[1]);
-        }
-        return kv[k];
-    },
-    remove: function (k) {
-        return this.set(k, 0, -1e3);
-    }
-};
-
-
 if(!window.Share){
     window.Share = {
         isQQ: isQQ(),
