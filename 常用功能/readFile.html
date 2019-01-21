@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>读取本地文件</title>
+    <meta charset="utf-8">
+    <style>
+    </style>
+</head>
+<body>
+<p>方法一：form表单提交，无法预览图片</p>
+<br/>
+<form enctype="multipart/form-data" method="post">
+    <input type="file" id="file-upload">
+</form>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<p>方法二：fileAPI</p>
+<br/>
+<form enctype="multipart/form-data" method="post">
+    <p>图片预览：</p>
+    <div id="preview"></div>
+    <p>
+        <input type="file" id="input-file">
+    </p>
+    <div id="info">
+
+    </div>
+</form>
+
+<script>
+    //file API操作
+    var preview = document.getElementById('preview');
+    var inputFile = document.getElementById('input-file');
+    var info = document.getElementById('info');
+
+    inputFile.addEventListener('input', function() {
+        preview.style.backgroundImage = 'none';
+        if (!inputFile.value) {
+            info.innerHTML = "请选择文件"
+            return ;
+        }
+
+        var file = inputFile.files[0];
+        info.innerHTML = "<p>文件：" +  file.name + "</p>" +
+                "<p>文件大小：" + file.size +  "</p>" +
+                "<p>文件上次修改时间：" + file.lastModified + "</p>"
+        console.log(file);
+        console.log("==============");
+        console.log(inputFile.files)
+
+
+        //文件预览
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            console.log("-----------")
+            var data = e.target.result;
+            console.log(data);
+            preview.style.backgroundImage = "url(" + data + ")";
+        }
+    })
+
+</script>
+</body>
+</html>
