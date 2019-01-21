@@ -21,7 +21,9 @@
 <br/>
 <form enctype="multipart/form-data" method="post">
     <p>图片预览：</p>
-    <div id="preview"></div>
+    <div>
+        <img id="preview"/>
+    </div>
     <p>
         <input type="file" id="input-file">
     </p>
@@ -36,7 +38,7 @@
     var inputFile = document.getElementById('input-file');
     var info = document.getElementById('info');
 
-    inputFile.addEventListener('input', function() {
+    inputFile.addEventListener('change', function() {
         preview.style.backgroundImage = 'none';
         if (!inputFile.value) {
             info.innerHTML = "请选择文件"
@@ -58,8 +60,9 @@
             console.log("-----------")
             var data = e.target.result;
             console.log(data);
-            preview.style.backgroundImage = "url(" + data + ")";
+            preview.src = data;
         }
+        reader.readAsDataURL(file);
     })
 
 </script>
