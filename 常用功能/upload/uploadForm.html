@@ -1,15 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>上传文件</title>
+    <title>利用form表单+iframe上传文件</title>
     <meta charset="utf-8">
     <style>
     </style>
 </head>
 <body>
-<p>方法一利用formData和XMLHttpRequest实现文件上传</p>
+<!--form的action字段写为上传的服务器地址-->
+<form enctype="multipart/form-data" id="upload_id" method="post" action="/server/upload">
+    <input type="file" onchange="uploadForm">
+    <!--需要提交的参数-->
+    <input type="hidden" name="param1" id="param1">
+    <input type="hidden" name="param2" id="param2">
+</form>
 
 <script>
+    function uploadForm() {
+        let form = document.getElementById('upload_id');
+        let param1 = document.getElementById('param1');
+        param1.value = 'param1';
+        let param2 = document.getElementById('param2');
+        param2.value = 'param2';
+
+        new AsyncForm(form).submit(function(response){
+            //操作处理
+        })
+    }
+
+    let userCallback;
+    function iframe(option) {
+        let iframe = null;
+        option = option || {
+            id: 'iframe' + Math.random(),
+            name: 'iframe_form',
+            src: ''
+        }
+
+        iframe = document.createElement('iframe');
+        iframe.name = option.name;
+
+        option.id && (iframe.id = option.id);
+        iframe.src = option.src;
+        iframe.style.cssText = option.style.cssText;
+
+        return iframe;
+    }
+
+    function AsyncForm(form) {
+        let uuid = asyncForm.uuid + 1;
+        let name = 'upload_file' + uuid;
+
+        this.form = form;
+        this.file = form;
+        this.iframe = iframe({
+            name: name,
+            src: 'javascript:;',
+            cssText: 'display:none'
+        })
+
+        document.body.appendChild(this.iframe);
+        this.form.target = name;   //将表单的target值设置为iframe的name值
+    }
+
+
+    AsyncForm.uuid = 0;
+    AsyncForm.prototype = {
+        checkState: function () {
+            let iframe = getDocument(this.iframe);
+            let state = (iframe.readyState || '').toLowerCase();
+
+            if (state && state == 'complete') {
+                this.form.submit()
+            }else {
+                setTimeout(function(){
+                    this.checkState.apply(this)
+                }, 50)
+            }
+        },
+        submit: function (cb) {
+            userCallback = cb;
+            this.iframe.addEventListener('load', callback);
+
+            this.checkState.apply(this);
+        }
+    }
+
+    function getDocument (frame) {
+        return frame.contentWindow? frame.contentWindow.document : (frame.contentDocument? frame.contentDocument: frame.document);
+    }
+    function callback(e) {
+        let doc = getDocument(this);
+        let docRoot = doc.body? doc.body: doc.document;
+        let responseText = JSON.parse(docRoot.innerHTML);
+
+        userCallback && userCallback(responseText, e);
+        document.body.removeChild(this);
+    }
 
 </script>
 </body>

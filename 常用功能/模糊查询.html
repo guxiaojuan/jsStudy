@@ -138,8 +138,6 @@
     //设置查询结果div坐标
 
     function ChangeCoords() {
-        //    var left = $("#txt_search")[0].offsetLeft; //获取距离最左端的距离，像素，整型
-        //    var top = $("#txt_search")[0].offsetTop + 26; //获取距离最顶端的距离，像素，整型（20为搜索输入框的高度）
         var left = $("#txt_search").position().left; //获取距离最左端的距离，像素，整型
         var top = $("#txt_search").position().top + 20; ; //获取距离最顶端的距离，像素，整型（20为搜索输入框的高度）
         $("#searchresult").css("left", left + "px"); //重新定义CSS属性
